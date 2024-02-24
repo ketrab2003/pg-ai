@@ -28,8 +28,9 @@ observation_matrix = np.hstack((np.ones(x_train.shape), x_train))
 theta_best = np.linalg.inv(observation_matrix.T.dot(observation_matrix)).dot(observation_matrix.T).dot(y_train)
 
 # TODO: calculate error
-mse = sum((y_test - (theta_best[0] + theta_best[1] * x_test)) ** 2)
-print(f'MSE: {mse}, theta: {theta_best}')
+mse = sum((y_train - (theta_best[0] + theta_best[1] * x_train)) ** 2)/len(x_train)
+print(y_test - (theta_best[0] + theta_best[1] * x_test))
+print(f'MSE: {mse}, theta: {theta_best.flatten()}')
 
 # plot the regression line
 x = np.linspace(min(x_test), max(x_test), 100)
@@ -65,8 +66,8 @@ for iteration in range(int(n_iterations)):
     theta_best = theta_best - learning_rate * gradient_mse
 
 # TODO: calculate error
-mse = sum((y_test - (theta_best[0] + theta_best[1] * x_test)) ** 2)
-print(f'MSE: {mse}, theta: {theta_best}')
+mse = sum((y_train - (theta_best[0] + theta_best[1] * x_train)) ** 2)/len(x_train)
+print(f'MSE: {mse}, theta: {theta_best.flatten()}')
 
 # plot the regression line
 x = np.linspace(min(x_test), max(x_test), 100)
