@@ -7,9 +7,10 @@ if TYPE_CHECKING:
 
 
 class MinMaxAgent:
-    def __init__(self, my_token='o', depth=3):
+    def __init__(self, my_token='o', depth=3, enable_heuristics=True):
         self.my_token = my_token
         self.depth = depth
+        self.enable_heuristics = enable_heuristics
 
     def decide(self, connect4: Connect4):
         if connect4.who_moves != self.my_token:
@@ -36,7 +37,10 @@ class MinMaxAgent:
             else:
                 return 0
         if depth <= 0:
-            return connect4.evaluate(self.my_token)
+            if self.enable_heuristics:
+                return connect4.evaluate(self.my_token)
+            else:
+                return 0
 
         if maximizing:
             value = -1
