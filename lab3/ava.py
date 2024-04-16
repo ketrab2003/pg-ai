@@ -5,9 +5,13 @@ from minmaxagent import MinMaxAgent
 from alphabetaagent import AlphaBetaAgent
 
 connect4 = Connect4(width=7, height=6)
-# connect4 = Connect4(width=5, height=6)
-agent1 = RandomAgent('o')
-agent2 = AlphaBetaAgent('x', depth=5)
+
+# agent1 = RandomAgent('o')
+# agent2 = MinMaxAgent('x', depth=3, enable_heuristics=True)
+
+agent1 = AlphaBetaAgent('o', depth=5, enable_heuristics=False)
+agent2 = MinMaxAgent('x', depth=3, enable_heuristics=True)
+
 while not connect4.game_over:
     connect4.draw()
     try:
