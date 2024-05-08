@@ -6,26 +6,30 @@ def initialize_centroids_forgy(data: np.ndarray, k: int):
 
 def initialize_centroids_kmeans_pp(data: np.ndarray, k: int):
     centroid = np.empty((k, data.shape[1]))
+
     first_idx = np.random.randint(data.shape[0])
     centroid[0, :] = data[first_idx, :]
 
     for i in np.arange(1, k):
-        distances = np.sqrt(np.sum((data.reshape((data.shape[0], 1, data.shape[1])) - centroid[:i, :].reshape((1, i, centroid.shape[1])))**2, axis=-1))
-        sum_distances = np.sum(distances, axis=-1)
-        max_idx = np.argmax(sum_distances)
+        diffs = data.reshape((data.shape[0], 1, data.shape[1])) - centroid[:i, :].reshape((1, i, centroid.shape[1]))
+        distances = np.sqrt(np.sum(diffs**2, axis=-1))
+        min_distances = np.min(distances, axis=-1)
+        max_idx = np.argmax(min_distances)
         centroid[i, :] = data[max_idx, :]
 
     return centroid
 
 def assign_to_cluster(data: np.ndarray, centroid: np.ndarray):
-    distances = np.sum((data.reshape((data.shape[0], 1, data.shape[1])) - centroid.reshape((1, *centroid.shape)))**2, axis=-1)
+    diffs = data.reshape((data.shape[0], 1, data.shape[1])) - centroid.reshape((1, *centroid.shape))
+    distances = np.sum(diffs**2, axis=-1)
     assignments: np.ndarray = np.argmin(distances, axis=-1)
     return assignments
 
 def update_centroids(data: np.ndarray, assignments: np.ndarray, num_centroids: int):
     new_centroids = np.empty((num_centroids, data.shape[1]))
     for assigned_class in np.arange(num_centroids):
-        new_centroids[assigned_class, :] = np.mean(data[assignments == assigned_class], axis=0)
+        classified = data[assignments == assigned_class]
+        new_centroids[assigned_class, :] = np.mean(classified, axis=0) if classified.size > 0 else 0
     return new_centroids
 
 def mean_intra_distance(data: np.ndarray, assignments: np.ndarray, centroids: np.ndarray):
