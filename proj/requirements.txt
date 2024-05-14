@@ -1,0 +1,4 @@
+matplotlib
+pygame
+torch
+torchvision
