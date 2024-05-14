@@ -1,7 +1,6 @@
 import copy
 
 import numpy as np
-from itertools import combinations
 
 
 class Node:
@@ -51,9 +50,7 @@ class Node:
         best_gain = -np.inf
         best_split = None
 
-        if feature_subset is None:
-            feature_subset = X.shape[1]
-
+        feature_subset = feature_subset or X.shape[1]
         features = np.random.choice(X.shape[1], feature_subset, replace=False)
 
         for d in features:

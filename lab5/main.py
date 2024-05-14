@@ -15,7 +15,7 @@ def evaluate(clusters, labels):
         print(f"Cluster: {cluster}")
         for label_type in np.unique(labels):
             print(f"Num of {label_type}: {np.sum(labels_in_cluster==label_type)}")
-    
+
 
 def clustering(kmeans_pp):
     data = load_iris()
