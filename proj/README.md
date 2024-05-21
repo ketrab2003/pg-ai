@@ -1,0 +1,1 @@
+Project moved here: https://github.com/KanarekLife/HandwrittenDigitRecognizer
