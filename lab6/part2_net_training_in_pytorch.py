@@ -4,6 +4,7 @@ import torch.nn.functional as F
 from data import ClassificationTwoSpiralsData
 from visualization_utils import inspect_data, plot_data, x_data_from_grid
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 class TorchMultiLayerNetwork(nn.Module):
@@ -45,12 +46,32 @@ def training(model: TorchMultiLayerNetwork, x: torch.Tensor, y: torch.Tensor):
 
     history = []; i_step=0
 
+    prepared_inds = np.arange(x.shape[0])
+    np.random.shuffle(prepared_inds)
+    batch_start = 0
+
+    chosen_indices = np.empty(minibatch_size)
+
     # pętla uczenia gradientowego
     for _ in range(n_steps):
 
         # TODO losowa paczka (mini-batch) danych o rozmiarze minibatch_size
         #  (użyj torch.randint do wylosowania indeksów przykładów
-        chosen_indices = torch.randint(0, x.shape[0], (minibatch_size,))
+        # chosen_indices = torch.randint(0, x.shape[0], (minibatch_size,))
+        chosen_indices_first = prepared_inds[batch_start:minibatch_size]
+        batch_start += minibatch_size
+
+        chosen_indices_second = np.empty(0)
+        if chosen_indices_first.size < minibatch_size:
+            # reshuffle and append more
+            np.random.shuffle(prepared_inds)
+            n_to_append = minibatch_size - chosen_indices_first.size
+            chosen_indices_second = prepared_inds[:n_to_append]
+            batch_start = n_to_append
+
+        chosen_indices[:chosen_indices_first.size] = chosen_indices_first
+        chosen_indices[chosen_indices_first.size:] = chosen_indices_second
+
         x_batch = x[chosen_indices]
         y_batch = y[chosen_indices]
 
